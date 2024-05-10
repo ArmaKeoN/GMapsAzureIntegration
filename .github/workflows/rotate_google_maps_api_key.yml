@@ -9,10 +9,8 @@ jobs:
   rotate-key:
     runs-on: ubuntu-latest
     steps:
-      # # Decode Google Cloud credentials from Base64
       # - name: Decode GCP Service Account Credentials
-      #   run: |
-      #     echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" | base64 --decode > ${{ github.workspace }}/gcp-credentials.json
+      #   run: echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" | base64 --decode > gcp-key.json
       #   shell: bash
 
       # Set up Google Cloud SDK
@@ -20,7 +18,7 @@ jobs:
         uses: google-github-actions/setup-gcloud@v0
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ github.workspace }}/gcp-credentials.json
+          service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
           export_default_credentials: true
 
       # Retrieve the existing API key (assuming it's already known which one to rotate)
