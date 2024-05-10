@@ -43,7 +43,10 @@ jobs:
           if [ "$(echo "$API_KEYS" | jq length)" -gt 0 ]; then
             NEW_API_KEY_UID=""
             for key in $(echo "$API_KEYS" | jq -r '.[] | .uid'); do
-              if [ "$key" != "$OLD_API_KEY_UID" ]; then
+              if [ -z "$OLD_API_KEY_UID" ]; then
+                NEW_API_KEY_UID=$key
+                break
+              elif [ "$key" != "$OLD_API_KEY_UID" ]; then
                 NEW_API_KEY_UID=$key
                 break
               fi
