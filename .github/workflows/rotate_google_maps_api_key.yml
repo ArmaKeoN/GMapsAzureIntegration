@@ -30,10 +30,20 @@ jobs:
           echo "API_KEY_NAME=$API_KEY_NAME" >> $GITHUB_ENV
 
       # Generate a new API key
-      - name: Generate new API key
-        id: create-key
+      - name: Generate API key and capture JSON
+        id: generate_key
         run: |
-          echo "NEW_API_KEY=$(gcloud services api-keys create --display-name='Google Maps Key' --format='value(keyString)')" >> $GITHUB_ENV
+          API_KEY_JSON=$(gcloud services api-keys create --display-name="Google Maps Key" --format=json)
+          echo "API_KEY_JSON=$API_KEY_JSON" >> $GITHUB_ENV
+        shell: /usr/bin/bash -e
+        env:
+          CLOUDSDK_METRICS_ENVIRONMENT: github-actions-setup-gcloud
+      
+      - name: Extract keyString and set as env var
+        run: |
+          KEY_STRING=$(echo $API_KEY_JSON | jq -r '.keyString')
+          echo "NEW_API_KEY=$KEY_STRING" >> $GITHUB_ENV
+        shell: /usr/bin/bash -e
 
       # Debugging: Print the value of NEW_API_KEY
       - name: Print NEW_API_KEY for debugging
