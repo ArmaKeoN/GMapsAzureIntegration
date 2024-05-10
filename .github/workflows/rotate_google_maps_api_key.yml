@@ -33,8 +33,7 @@ jobs:
       - name: Generate new API key
         id: create-key
         run: |
-          NEW_API_KEY=$(gcloud services api-keys create --display-name="Google Maps Key" --format="value(keyString)")
-          echo "NEW_API_KEY=$NEW_API_KEY" >> $GITHUB_ENV
+          echo "NEW_API_KEY=$(gcloud services api-keys create --display-name='Google Maps Key' --format='value(keyString)')" >> $GITHUB_ENV
 
       # Debugging: Print the value of NEW_API_KEY
       - name: Print NEW_API_KEY for debugging
