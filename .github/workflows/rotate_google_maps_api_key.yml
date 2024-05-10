@@ -42,10 +42,9 @@ jobs:
           API_KEYS=$(gcloud services api-keys list --filter="displayName:Google Maps Key" --format="json")
           if [ "$(echo "$API_KEYS" | jq length)" -gt 0 ]; then
             NEW_API_KEY_UID=""
-            for key in $(echo "$API_KEYS" | jq -r '.[]'); do
-              KEY_UID=$(echo "$key" | jq -r '.uid')
-              if [ "$KEY_UID" != "$OLD_API_KEY_UID" ]; then
-                NEW_API_KEY_UID=$KEY_UID
+            for key in $(echo "$API_KEYS" | jq -r '.[] | .uid'); do
+              if [ "$key" != "$OLD_API_KEY_UID" ]; then
+                NEW_API_KEY_UID=$key
                 break
               fi
             done
