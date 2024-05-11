@@ -34,7 +34,7 @@ jobs:
       - name: Generate new API key
         id: create-key
         run: |
-          gcloud services api-keys create --display-name="Google Maps Key" > /dev/null
+          gcloud services api-keys create --display-name="Google Maps Key" > /dev/null 2>&1
           echo "New API key generated."
 
       - name: Get new API key path
