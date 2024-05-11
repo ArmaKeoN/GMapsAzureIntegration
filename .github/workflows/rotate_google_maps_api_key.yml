@@ -102,4 +102,4 @@ jobs:
           # Delete the old API key
           gcloud services api-keys delete $OLD_API_KEY_UID > /dev/null 2>&1
 
-          echo "Old API key disabled or deleted"
+          echo "Old API key deleted"
