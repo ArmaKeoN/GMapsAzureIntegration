@@ -54,7 +54,7 @@ jobs:
             done
             if [ -n "$NEW_API_KEY_UID" ]; then
               NEW_API_KEY_PATH=$(echo "$API_KEYS" | jq -r --arg uid "$NEW_API_KEY_UID" '.[] | select(.uid == $uid) | .name')
-              echo "::add-mask::NEW_API_KEY_PATH=$NEW_API_KEY_PATH" >> $GITHUB_ENV
+              echo "NEW_API_KEY_PATH=$NEW_API_KEY_PATH" >> $GITHUB_ENV > /dev/null
             else
               echo "No new API key found with a different UID than the old one."
             fi
@@ -66,7 +66,7 @@ jobs:
         id: get-new-key
         run: |
           NEW_API_KEY=$(gcloud services api-keys get-key-string $NEW_API_KEY_PATH --format=json | jq -r '.keyString')
-          echo "NEW_API_KEY=$NEW_API_KEY" >> $GITHUB_ENV
+          echo "NEW_API_KEY=$NEW_API_KEY" >> $GITHUB_ENV > /dev/null
 
       # Store the new API key in Azure Key Vault
       - name: Login to Azure
