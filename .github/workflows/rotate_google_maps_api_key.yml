@@ -87,8 +87,10 @@ jobs:
           echo "::set-output name=api_keys::$API_KEYS_JSON"
 
       # Optional: Disable or delete the old API key
-      - name: Disable old API key
-        if: env.API_KEY_NAME != ''
+      - name: Disable or delete old API key
+        if: env.OLD_API_KEY_UID != ''
         run: |
-          gcloud services api-keys disable $API_KEY_NAME --quiet
-          echo "Old API key disabled"
+          # Delete the old API key
+          gcloud services api-keys delete $OLD_API_KEY_UID --quiet
+
+          echo "Old API key disabled or deleted"
