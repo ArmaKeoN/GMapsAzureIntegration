@@ -66,6 +66,7 @@ jobs:
         id: get-new-key
         run: |
           NEW_API_KEY=$(gcloud services api-keys get-key-string $NEW_API_KEY_PATH --format=json | jq -r '.keyString')
+          echo "::add-mask::$NEW_API_KEY"
           echo "NEW_API_KEY=$NEW_API_KEY" >> $GITHUB_ENV
 
       # Store the new API key in Azure Key Vault
