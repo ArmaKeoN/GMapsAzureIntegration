@@ -3,7 +3,7 @@ This repository hosts a GitHub Actions workflow for automatically rotating Googl
 
 ## Rotate and List Google Maps API Keys
 
-This comprehensive documentation outlines the process for the automated rotation and listing of Google Maps API keys within the `GMapsAzureIntegration` GitHub project. This process is designed to be operational and maintainable by engineers at Hyperproof, ensuring high security and compliance standards.
+This comprehensive documentation outlines the process for the automated rotation and listing of Google Maps API keys within the `GMapsAzureIntegration` GitHub project. This process is designed to be operational and maintainable by engineers, ensuring high security and compliance standards.
 
 ### Workflow Overview
 
