@@ -24,13 +24,18 @@ jobs:
         id: get-old-key-uid
         run: |
           API_KEYS=$(gcloud services api-keys list --filter="displayName:Google Maps Key" --format="json")
-          if [ "$(echo "$API_KEYS" | jq length)" -gt 0 ]; then
+          KEY_COUNT=$(echo "$API_KEYS" | jq length)
+          if [ "$KEY_COUNT" -eq 1 ]; then
             OLD_API_KEY_UID=$(echo "$API_KEYS" | jq -r '.[0].uid')
             echo "OLD_API_KEY_UID=$OLD_API_KEY_UID" >> $GITHUB_ENV
-            echo "Old API key path retrieved."
-          else
+            echo "Old API key UID retrieved."
+          elif [ "$KEY_COUNT" -eq 0 ]; then
             echo "No existing API key found."
-          fi
+            exit 1
+          else
+            echo "Error: More than one API key found. Exiting."
+            exit 1
+          fi    
 
       - name: Generate new API key
         id: create-key
@@ -45,10 +50,7 @@ jobs:
           if [ "$(echo "$API_KEYS" | jq length)" -gt 0 ]; then
             NEW_API_KEY_UID=""
             for key in $(echo "$API_KEYS" | jq -r '.[] | .uid'); do
-              if [ -z "$OLD_API_KEY_UID" ]; then
-                NEW_API_KEY_UID=$key
-                break
-              elif [ "$key" != "$OLD_API_KEY_UID" ]; then
+              if [ "$key" != "$OLD_API_KEY_UID" ]; then
                 NEW_API_KEY_UID=$key
                 break
               fi
