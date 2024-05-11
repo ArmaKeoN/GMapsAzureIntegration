@@ -27,6 +27,7 @@ jobs:
           if [ "$(echo "$API_KEYS" | jq length)" -gt 0 ]; then
             OLD_API_KEY_UID=$(echo "$API_KEYS" | jq -r '.[0].uid')
             echo "OLD_API_KEY_UID=$OLD_API_KEY_UID" >> $GITHUB_ENV
+            echo "Old API key path retrieved."
           else
             echo "No existing API key found."
           fi
@@ -55,6 +56,7 @@ jobs:
             if [ -n "$NEW_API_KEY_UID" ]; then
               NEW_API_KEY_PATH=$(echo "$API_KEYS" | jq -r --arg uid "$NEW_API_KEY_UID" '.[] | select(.uid == $uid) | .name')
               echo "NEW_API_KEY_PATH=$NEW_API_KEY_PATH" >> $GITHUB_ENV
+              echo "New API key path retrieved."
             else
               echo "No new API key found with a different UID than the old one."
             fi
@@ -68,6 +70,7 @@ jobs:
           NEW_API_KEY=$(gcloud services api-keys get-key-string $NEW_API_KEY_PATH --format=json | jq -r '.keyString')
           echo "::add-mask::$NEW_API_KEY"
           echo "NEW_API_KEY=$NEW_API_KEY" >> $GITHUB_ENV
+          echo "New API key retrieved."
 
       # Store the new API key in Azure Key Vault
       - name: Login to Azure
@@ -82,7 +85,7 @@ jobs:
             exit 1
           else
             az keyvault secret set --vault-name GMapsKeyVault --name GoogleMapKey --value "$NEW_API_KEY" > /dev/null
-            echo "New API key stored in Azure Key Vault"
+            echo "New API key stored in Azure Key Vault."
           fi
 
       # List all Google Maps API keys after creating new one
@@ -97,6 +100,6 @@ jobs:
         if: env.OLD_API_KEY_UID != ''
         run: |
           # Delete the old API key
-          gcloud services api-keys delete $OLD_API_KEY_UID --quiet
+          gcloud services api-keys delete $OLD_API_KEY_UID > /dev/null 2>&1
 
           echo "Old API key disabled or deleted"
