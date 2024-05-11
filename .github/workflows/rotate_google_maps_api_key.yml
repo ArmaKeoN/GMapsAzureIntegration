@@ -2,7 +2,7 @@ name: Rotate and List Google Maps API Keys
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # Runs daily at midnight
+    - cron: '0 0 * * *'  # Runs daily at midnight UTC time to be consistent across timezone
   workflow_dispatch:
 
 jobs:
@@ -11,15 +11,16 @@ jobs:
     steps:
       # Set up Google Cloud SDK
       - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v0
+        uses: google-github-actions/setup-gcloud@v2.1.0
         with:
+          version: '475.0.0'  # Specify the desired GCP SDK version
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
           export_default_credentials: true
 
-      # Retrieve the existing API key (assuming it's already known which one to rotate)
-      - name: Get existing API key
-        id: get-keys
+      # Retrieve old API key (assuming it's already known which one to rotate)
+      - name: Get old API key uid
+        id: get-old-key-uid
         run: |
           API_KEYS=$(gcloud services api-keys list --filter="displayName:Google Maps Key" --format="json")
           if [ "$(echo "$API_KEYS" | jq length)" -gt 0 ]; then
@@ -37,7 +38,7 @@ jobs:
 
       # Retrieve new API key path
       - name: Get new API key path
-        id: get-key-path
+        id: get-new-key-path
         run: |
           API_KEYS=$(gcloud services api-keys list --filter="displayName:Google Maps Key" --format="json")
           if [ "$(echo "$API_KEYS" | jq length)" -gt 0 ]; then
@@ -61,9 +62,9 @@ jobs:
             echo "No existing API key found."
           fi
 
-      # Extract the api key from the key value pair
-      - name: Extract new API key
-        id: extract-new-key
+      # Retrieve the new api key from the key value pair
+      - name: Get new API key
+        id: get-new-key
         run: |
           NEW_API_KEY=$(gcloud services api-keys get-key-string $NEW_API_KEY_PATH --format=json | jq -r '.keyString')
           echo "NEW_API_KEY=$NEW_API_KEY" >> $GITHUB_ENV
@@ -86,8 +87,8 @@ jobs:
           echo "$API_KEYS_JSON" | jq '.'
           echo "::set-output name=api_keys::$API_KEYS_JSON"
 
-      # Optional: Disable or delete the old API key
-      - name: Disable or delete old API key
+      # Delete the old API key by uid
+      - name: Delete old API key by uid
         if: env.OLD_API_KEY_UID != ''
         run: |
           # Delete the old API key
