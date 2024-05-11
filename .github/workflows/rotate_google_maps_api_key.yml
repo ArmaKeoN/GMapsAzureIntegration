@@ -31,13 +31,12 @@ jobs:
             echo "No existing API key found."
           fi
 
-      # Generate a new API key
       - name: Generate new API key
         id: create-key
         run: |
-          gcloud services api-keys create --display-name="Google Maps Key"
+          gcloud services api-keys create --display-name="Google Maps Key" > /dev/null
+          echo "New API key generated."
 
-      # Retrieve new API key path
       - name: Get new API key path
         id: get-new-key-path
         run: |
@@ -55,7 +54,7 @@ jobs:
             done
             if [ -n "$NEW_API_KEY_UID" ]; then
               NEW_API_KEY_PATH=$(echo "$API_KEYS" | jq -r --arg uid "$NEW_API_KEY_UID" '.[] | select(.uid == $uid) | .name')
-              echo "NEW_API_KEY_PATH=$NEW_API_KEY_PATH" >> $GITHUB_ENV
+              echo "::add-mask::NEW_API_KEY_PATH=$NEW_API_KEY_PATH" >> $GITHUB_ENV
             else
               echo "No new API key found with a different UID than the old one."
             fi
@@ -63,12 +62,11 @@ jobs:
             echo "No existing API key found."
           fi
 
-      # Retrieve the new api key from the key value pair
-      - name: Get new API key
+      - name: Get new API key by path
         id: get-new-key
         run: |
           NEW_API_KEY=$(gcloud services api-keys get-key-string $NEW_API_KEY_PATH --format=json | jq -r '.keyString')
-          echo "NEW_API_KEY=$NEW_API_KEY" >> $GITHUB_ENV
+          echo "::add-mask::NEW_API_KEY=$NEW_API_KEY" >> $GITHUB_ENV
 
       # Store the new API key in Azure Key Vault
       - name: Login to Azure
@@ -78,7 +76,7 @@ jobs:
 
       - name: Set new API key in Azure Key Vault
         run: |
-          az keyvault secret set --vault-name GMapsKeyVault --name GoogleMapKey --value $NEW_API_KEY
+          az keyvault secret set --vault-name GMapsKeyVault --name GoogleMapKey --value $NEW_API_KEY > /dev/null
           echo "New API key stored in Azure Key Vault"
 
       # List all Google Maps API keys after creating new one
