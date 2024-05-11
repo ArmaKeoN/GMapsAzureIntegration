@@ -9,14 +9,15 @@ jobs:
   rotate-and-list-keys:
     runs-on: ubuntu-latest
     steps:
-      # Set up Google Cloud SDK
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v2.1.0
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v2'
         with:
-          version: '475.0.0'  # Specify the desired GCP SDK version
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-          export_default_credentials: true
+          credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v2.1.0'
+        with:
+          version: '475.0.0'
 
       # Retrieve old API key (assuming it's already known which one to rotate)
       - name: Get old API key uid
