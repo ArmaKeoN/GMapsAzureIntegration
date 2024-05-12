@@ -17,7 +17,7 @@ This GitHub Actions workflow is scheduled to run daily at midnight UTC and can b
 - **JQ**: Command-line JSON processor used for parsing command outputs.
 
 ### Key Resources
-
+- **Repository Secrets**: `AZURE_CREDENTIALS`,`GOOGLE_APPLICATION_CREDENTIALS`
 - **GitHub Repository**: [GMapsAzureIntegration](https://github.com/ArmaKeoN/GMapsAzureIntegration)
 - **Google Cloud Project**: `GMapsAzureIntegration`
 - **Google Cloud Service Principal**: `gmaps-apikey-manager`
