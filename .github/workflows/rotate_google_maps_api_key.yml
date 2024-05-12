@@ -35,44 +35,16 @@ jobs:
           else
             echo "Error: More than one API key found. Exiting."
             exit 1
-          fi    
+          fi
 
       - name: Generate new API key
         id: create-key
         run: |
-          gcloud services api-keys create --display-name="Google Maps Key" > /dev/null 2>&1
-          echo "New API key generated."
-
-      - name: Get new API key path
-        id: get-new-key-path
-        run: |
-          API_KEYS=$(gcloud services api-keys list --filter="displayName:Google Maps Key" --format="json")
-          if [ "$(echo "$API_KEYS" | jq length)" -gt 0 ]; then
-            NEW_API_KEY_UID=""
-            for key in $(echo "$API_KEYS" | jq -r '.[] | .uid'); do
-              if [ "$key" != "$OLD_API_KEY_UID" ]; then
-                NEW_API_KEY_UID=$key
-                break
-              fi
-            done
-            if [ -n "$NEW_API_KEY_UID" ]; then
-              NEW_API_KEY_PATH=$(echo "$API_KEYS" | jq -r --arg uid "$NEW_API_KEY_UID" '.[] | select(.uid == $uid) | .name')
-              echo "NEW_API_KEY_PATH=$NEW_API_KEY_PATH" >> $GITHUB_ENV
-              echo "New API key path retrieved."
-            else
-              echo "No new API key found with a different UID than the old one."
-            fi
-          else
-            echo "No existing API key found."
-          fi
-
-      - name: Get new API key by path
-        id: get-new-key
-        run: |
-          NEW_API_KEY=$(gcloud services api-keys get-key-string $NEW_API_KEY_PATH --format=json | jq -r '.keyString')
-          echo "::add-mask::$NEW_API_KEY"
+          OUTPUT=$(gcloud services api-keys create --display-name="Google Maps Key" --format="value(keyString)" 2>&1)
+          JSON=$(echo "$OUTPUT" | sed 's/.*{/{/')
+          NEW_API_KEY=$(echo "$JSON" | jq -r '.keyString')
           echo "NEW_API_KEY=$NEW_API_KEY" >> $GITHUB_ENV
-          echo "New API key retrieved."
+          echo "New API key generated."
 
       # Store the new API key in Azure Key Vault
       - name: Login to Azure
