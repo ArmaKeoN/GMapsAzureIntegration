@@ -79,7 +79,7 @@ Further enhancements can include setting different keys for different environmen
 
 ### Disclosure of AI Tools and External Resources
 
-- **ChatGPT by OpenAI**: Used to generate this documentation. Provides natural language processing capabilities but might occasionally require manual adjustment for technical accuracy or clarity.
+- **ChatGPT by OpenAI**: Utilized for generating documentation and code, as well as for troubleshooting and debugging code to enhance and streamline workflow processes.
 - **Google GitHub Actions**: Provides direct integration for managing resources within GitHub workflows. Simplifies automation but relies on correct permissions and credentials setup.
 
 ### Security and Compliance
