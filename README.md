@@ -56,9 +56,6 @@ This section provides the local times the task is scheduled to run across variou
 4. **Generate New API Key**:
     - Create a new Google Maps API key and store it temporarily.
 
-5. **Retrieve New API Key**:
-    - Extract the path and key string for the newly generated API key.
-
 6. **Store New API Key in Azure Key Vault**:
     - Authenticate with Azure and update the Azure Key Vault with the new API key.
 
@@ -86,8 +83,6 @@ Further enhancements can include setting different keys for different environmen
 
 Regular key rotation is enforced to minimize risks, and updates to the workflow should adhere to security best practices. Maintenance involves updating the documentation to reflect any procedural or tool changes.
 
-This workflow and its documentation should be periodically reviewed to ensure it continues to meet operational needs and compliance standards effectively.
-
 ### Benefits
 
 - **Automation**: Fully automates the rotation of API keys, reducing manual errors and enhancing security.
@@ -98,5 +93,35 @@ This workflow and its documentation should be periodically reviewed to ensure it
 
 - **Complexity**: Requires initial setup and understanding of cloud services and GitHub Actions.
 - **Dependency on External Services**: Relies on services remaining available and API compatibility.
+
+### Action Items
+
+- **API Key Management**: Assess whether the old API key should be deleted or merely disabled.
+- **Environment Specific Keys**: Decide if different environments should have distinct API keys.
+- **Single vs. Multiple Keys**: Determine if a single API key per environment suffices or if multiple keys are necessary.
+- **Rotation Schedule**: Establish a rotation schedule for the API key—daily, weekly, monthly, or annually.
+- **Workflow Timing**: Optimize the timing for this workflow's execution, considering whether multiple branches should run at different times to accommodate various time zones.
+
+### Suggestions
+
+- **Enhanced Script Flexibility**: Parameterize the script to toggle the output of information/data, particularly for debugging.
+- **Secure Handling of API Keys**: Pass the old API key as a secret environment variable to identify and manage outdated keys, provided this is compliant with Azure’s security practices.
+- **Warning Clean-Up**: Address and resolve any warnings that emerge during execution.
+- **API Key Propagation**: Ensure new API keys are fully propagated and functional before retiring the old keys.
+- **Disablement vs. Deletion**: Consider disabling instead of deleting API keys to avoid potential confusion and issues.
+- **Notification System**: Implement a notification feature to inform stakeholders promptly upon successful API key rotation.
+- **Robust Error Handling**: Expand error handling to manage most exceptions, minimizing the potential for unforeseen problems.
+- **Sensitive Information Management**: Explore using GitHub’s native features to mask sensitive output instead of traditional methods like redirection to `/dev/null`.
+- **Authentication Best Practices**: Investigate the use of Workload Identity Federation as recommended by GCP over Service Principal/Account.
+- **Manual Trigger Considerations**: Evaluate the necessity of manually triggering the workflow, potentially limiting or removing this capability to enhance security.
+- **Logging and Documentation**: Implement strategies to log output to files securely, possibly uploading these logs as artifacts to a designated repository area.
+- **Infrastructure as Code**: Use Terraform or ARM templates to document the commands used to set up resources in Azure/GCP, serving as a reference for future environments.
+- **Least Privilege Access**: Define custom roles with the least privilege necessary for Azure Key Vault and apply similar principles to GCP roles.
+
+### Drawbacks of Using ChatGPT
+
+- **Verification Necessity**: There were occasions when I needed to verify the accuracy of information, as ChatGPT sometimes provided incorrect or illogical responses.
+- **Efficiency Concerns**: While ChatGPT is instrumental in drafting initial versions, its lack of deep contextual understanding led to inefficiencies, notably when troubleshooting issues related to capturing outputs from GCP commands.
+- **Knowledge Dependency**: Effective use of ChatGPT requires a solid foundational knowledge of the task at hand; otherwise, significant time might be spent directing the AI to achieve the desired outcome.
 
 This documentation should be reviewed and updated periodically to reflect any changes in the workflow or underlying technologies.
