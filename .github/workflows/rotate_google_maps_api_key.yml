@@ -43,6 +43,7 @@ jobs:
           OUTPUT=$(gcloud services api-keys create --display-name="Google Maps Key" --format="value(keyString)" 2>&1)
           JSON=$(echo "$OUTPUT" | sed 's/.*{/{/')
           NEW_API_KEY=$(echo "$JSON" | jq -r '.keyString')
+          echo "::add-mask::$NEW_API_KEY"
           echo "NEW_API_KEY=$NEW_API_KEY" >> $GITHUB_ENV
           echo "New API key generated."
 
