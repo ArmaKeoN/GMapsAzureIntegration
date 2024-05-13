@@ -9,6 +9,29 @@ This comprehensive documentation outlines the process for the automated rotation
 
 This GitHub Actions workflow is scheduled to run daily at midnight UTC and can be triggered manually via workflow dispatch. It ensures that Google Maps API keys are rotated regularly for security reasons and updates Azure Key Vault with the new key.
 
+### Workflow Steps
+
+1. **Authentication**:
+    - Authenticate with Google Cloud using the provided JSON credentials.
+
+2. **Set up Cloud SDK**:
+    - Set up a specific version of the Google Cloud SDK to ensure compatibility and stability.
+
+3. **Retrieve Old API Key**:
+    - List the current Google Maps API keys and identify the key to be rotated.
+
+4. **Generate New API Key**:
+    - Create a new Google Maps API key and store it temporarily.
+
+5. **Store New API Key in Azure Key Vault**:
+    - Authenticate with Azure and update the Azure Key Vault with the new API key.
+
+6. **List All API Keys**:
+    - List all Google Maps API keys post-rotation for verification.
+
+7. **Delete Old API Key**:
+    - Delete the old API key from Google Cloud to maintain security.
+
 ### Tools and Technologies Used
 
 - **GitHub Actions**: Used for automating the workflow.
@@ -42,42 +65,9 @@ This section provides the local times the task is scheduled to run across variou
 - **PST (UTC-8)**: 16:00 (4 PM) previous day
 - **Summer Time Adjustments**: EDT (UTC-4), CDT (UTC-5), MDT (UTC-6), PDT (UTC-7)
 
-### Workflow Steps
-
-1. **Authentication**:
-    - Authenticate with Google Cloud using the provided JSON credentials.
-
-2. **Set up Cloud SDK**:
-    - Set up a specific version of the Google Cloud SDK to ensure compatibility and stability.
-
-3. **Retrieve Old API Key**:
-    - List the current Google Maps API keys and identify the key to be rotated.
-
-4. **Generate New API Key**:
-    - Create a new Google Maps API key and store it temporarily.
-
-6. **Store New API Key in Azure Key Vault**:
-    - Authenticate with Azure and update the Azure Key Vault with the new API key.
-
-7. **List All API Keys**:
-    - List all Google Maps API keys post-rotation for verification.
-
-8. **Delete Old API Key**:
-    - Delete the old API key from Google Cloud to maintain security.
-
-### Assumptions and Suggestions
-
-- **Assumptions**: The process assumes the presence of only one Google Maps API key at any given time in both Google Cloud Platform and Azure.
-- **Suggestions**: Enhancements like different keys for environments, determining rotation periods, parameterizing scripts, and advanced error handling are proposed for future iterations.
-
 ### Enhancements and Maintenance
 
 Further enhancements can include setting different keys for different environments, deciding on the optimal rotation period, and adding features like notifications for stakeholders about key rotations. Engineers can also consider using native GitHub features for better security practices and potentially implementing Workload Identity Federation as recommended by Google Cloud.
-
-### Disclosure of AI Tools and External Resources
-
-- **ChatGPT by OpenAI**: Utilized for generating documentation and code, as well as for troubleshooting and debugging code to enhance and streamline workflow processes.
-- **Google GitHub Actions**: Provides direct integration for managing resources within GitHub workflows. Simplifies automation but relies on correct permissions and credentials setup.
 
 ### Security and Compliance
 
@@ -93,6 +83,16 @@ Regular key rotation is enforced to minimize risks, and updates to the workflow 
 
 - **Complexity**: Requires initial setup and understanding of cloud services and GitHub Actions.
 - **Dependency on External Services**: Relies on services remaining available and API compatibility.
+
+### Drawbacks of Using ChatGPT
+
+- **Verification Necessity**: There were occasions when I needed to verify the accuracy of information, as ChatGPT sometimes provided incorrect or illogical responses.
+- **Efficiency Concerns**: While ChatGPT is instrumental in drafting initial versions, its lack of deep contextual understanding led to inefficiencies, notably when troubleshooting issues related to capturing outputs from GCP commands.
+- **Knowledge Dependency**: Effective use of ChatGPT requires a solid foundational knowledge of the task at hand; otherwise, significant time might be spent directing the AI to achieve the desired outcome.
+
+### Assumptions and Suggestions
+
+- **Assumptions**: The process assumes the presence of only one Google Maps API key at any given time in both Google Cloud Platform and Azure.
 
 ### Action Items
 
@@ -118,10 +118,9 @@ Regular key rotation is enforced to minimize risks, and updates to the workflow 
 - **Infrastructure as Code**: Use Terraform or ARM templates to document the commands used to set up resources in Azure/GCP, serving as a reference for future environments.
 - **Least Privilege Access**: Define custom roles with the least privilege necessary for Azure Key Vault and apply similar principles to GCP roles.
 
-### Drawbacks of Using ChatGPT
+### Disclosure of AI Tools and External Resources
 
-- **Verification Necessity**: There were occasions when I needed to verify the accuracy of information, as ChatGPT sometimes provided incorrect or illogical responses.
-- **Efficiency Concerns**: While ChatGPT is instrumental in drafting initial versions, its lack of deep contextual understanding led to inefficiencies, notably when troubleshooting issues related to capturing outputs from GCP commands.
-- **Knowledge Dependency**: Effective use of ChatGPT requires a solid foundational knowledge of the task at hand; otherwise, significant time might be spent directing the AI to achieve the desired outcome.
+- **ChatGPT by OpenAI**: Utilized for generating documentation and code, as well as for troubleshooting and debugging code to enhance and streamline workflow processes.
+- **Google GitHub Actions**: Provides direct integration for managing resources within GitHub workflows. Simplifies automation but relies on correct permissions and credentials setup.
 
 This documentation should be reviewed and updated periodically to reflect any changes in the workflow or underlying technologies.
