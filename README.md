@@ -65,10 +65,6 @@ This section provides the local times the task is scheduled to run across variou
 - **PST (UTC-8)**: 16:00 (4 PM) previous day
 - **Summer Time Adjustments**: EDT (UTC-4), CDT (UTC-5), MDT (UTC-6), PDT (UTC-7)
 
-### Enhancements and Maintenance
-
-Further enhancements can include setting different keys for different environments, deciding on the optimal rotation period, and adding features like notifications for stakeholders about key rotations. Engineers can also consider using native GitHub features for better security practices and potentially implementing Workload Identity Federation as recommended by Google Cloud.
-
 ### Security and Compliance
 
 Regular key rotation is enforced to minimize risks, and updates to the workflow should adhere to security best practices. Maintenance involves updating the documentation to reflect any procedural or tool changes.
